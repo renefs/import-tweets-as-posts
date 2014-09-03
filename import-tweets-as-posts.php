@@ -164,7 +164,7 @@ if($ITAP_Settings){
 	            	}            	
 	            }            
 	          }
-	          if($has_required_hashtag) continue;
+	          if(!$has_required_hashtag) continue;
 	      }
           
           $post_exist = get_posts(array(
