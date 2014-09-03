@@ -104,6 +104,8 @@ if($ITAP_Settings){
       $twitter_post_status = get_option('itap_post_status');
       $import_retweets = get_option('itap_import_retweets');
       $exclude_replies = get_option('itap_exclude_replies');
+      
+      $tweet_hashtag = get_option('itap_tweet_hashtag');
 
       $connection = new TwitterOAuth($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
       $post_status_check =  array('publish','pending','draft','auto-draft', 'future', 'private', 'inherit','schedule');
@@ -150,6 +152,21 @@ if($ITAP_Settings){
       if($tweets){
         foreach($tweets as $tweet){
           $tweet_id = abs((int)$tweet->id);
+          
+          //Import only the tweets with the selected hashtag, not all.
+          if(strcmp($tweet_hashtag, '')!=0){
+	          $has_required_hashtag = false;
+	          if($hashtags){
+	            foreach($hashtags as $hashtag){
+	            	if(strcmp($hashtag->text, $tweet_hashtag)==0){
+		            	$has_required_hashtag =true;
+		            	break;
+	            	}            	
+	            }            
+	          }
+	          if($has_required_hashtag) continue;
+	      }
+          
           $post_exist = get_posts(array(
             'category' => $twitter_posts_category, 
             'meta_key' => '_tweet_id',
@@ -157,7 +174,6 @@ if($ITAP_Settings){
             'post_status' => $post_status_check
           ));
           if($post_exist) continue; // Do Nothing
-            
 
           // Convert links to real links.
 //          $pattern = '/http:(\S)+/';

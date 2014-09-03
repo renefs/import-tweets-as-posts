@@ -27,6 +27,8 @@ if(!class_exists('ImportTweetsAsPosts_Settings')){
 			register_setting('import_tweets_as_posts-group', 'itap_import_retweets');
 			register_setting('import_tweets_as_posts-group', 'itap_exclude_replies');
 			register_setting('import_tweets_as_posts-group', 'itap_wp_time_as_published_date');
+			
+			register_setting('import_tweets_as_posts-group', 'itap_tweet_hashtag');
 
 			// add your settings section
 			add_settings_section(
@@ -47,7 +49,7 @@ if(!class_exists('ImportTweetsAsPosts_Settings')){
       );
       add_settings_field(
           'itap_user_id',
-          'Twitter User ID',
+          'Twitter Username',
           array(&$this, 'itap_settings_field'),
           'import_tweets_as_posts',
           'import_tweets_as_posts-section',
@@ -165,6 +167,16 @@ if(!class_exists('ImportTweetsAsPosts_Settings')){
         'import_tweets_as_posts-section',
         array('field' => 'itap_wp_time_as_published_date','field_type'=> 'selectbox')
       );
+      
+      add_settings_field(
+        'itap_tweet_hashtag',
+        'Import tweets with hashtag',
+        array(&$this, 'itap_settings_field'),
+        'import_tweets_as_posts',
+        'import_tweets_as_posts-section',
+        array('field' => 'itap_tweet_hashtag','field_type'=> 'input')
+      );
+      
     } // END public static function activate
         
     public function settings_section_import_tweets_as_posts(){
@@ -190,6 +202,10 @@ if(!class_exists('ImportTweetsAsPosts_Settings')){
         }
         if($field == 'itap_interval_time'){
            _e('<span class="note">Enter interval time in minutes (e.g. 5).</span>');
+        }
+    
+        if($field == 'itap_tweet_hashtag'){
+           _e('<span class="note">Keep blank to import all new tweets.</span>');
         }
 
       } else if($field_type=='selectbox'){
