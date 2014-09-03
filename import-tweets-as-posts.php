@@ -231,6 +231,8 @@ if($ITAP_Settings){
             'comment_status' => 'closed'
           ); 
           $insert_id = wp_insert_post($data);
+          //Set post status to status, usually this kind of content.
+          set_post_format($insert_id, 'status' );
 
           // Add Featured Image to Post
           $tweet_media = $tweet->entities->media;
